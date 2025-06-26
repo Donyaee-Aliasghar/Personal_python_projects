@@ -1,6 +1,4 @@
 from typing import List, Tuple
-from Bio.SeqRecord import SeqRecord
-
 
 def gc_content(seq: str) -> float:
     gc = sum(base in "GCgc" for base in seq)

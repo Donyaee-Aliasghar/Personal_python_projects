@@ -1,7 +1,7 @@
-import pytest
-from utils.gc_calculator import sliding_gc_calculator
 import sys
 import os
+
+from src.gc_content_calculator.utils.gc_calculator import sliding_gc_calculator
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 

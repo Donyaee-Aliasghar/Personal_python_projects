@@ -1,7 +1,5 @@
 import streamlit as st
-import matplotlib.pylot as plt
 import pandas as pd
-import os
 
 from utils.gc_calculator import sliding_gc_calculator
 from utils.io_helper import parser_sequence_file
