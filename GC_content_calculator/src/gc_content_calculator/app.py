@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-from utils.gc_calculator import sliding_gc_calculator
-from utils.io_helper import parser_sequence_file
+from src.gc_content_calculator.utils.gc_calculator import sliding_gc_calculator
+from src.gc_content_calculator.utils.io_helper import parser_sequence_file
 
 st.set_page_config(page_title="GC content calculator", layout="centered")
 st.title("🧬 GC content calculator")

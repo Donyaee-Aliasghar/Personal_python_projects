@@ -1,7 +1,7 @@
 [project]
 name = "gene-expression-analysis-script"
 version = "0.1.0"
-description = ""
+description = "project for analysis gene sequences"
 authors = [
     {name = "Donyaee-Aliasghar",email = "donyaeealiasghar@gmail.com"}
 ]
