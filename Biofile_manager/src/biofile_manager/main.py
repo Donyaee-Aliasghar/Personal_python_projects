@@ -1,6 +1,6 @@
 import os
 from src.biofile_manager.parsers.fasta_parser import parse_fasta
-from utils.stats import summarize_fasta
+from src.biofile_manager.utils.stats import summarize_fasta
 
 
 def main():
