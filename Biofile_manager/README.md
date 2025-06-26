@@ -1,4 +1,4 @@
 how to run project?
     1. cd the Biofile_manager folder
-    ?. python3 -m src.cli [-h] -i INPUT -f {fasta,fastq} [-o OUTPUT] [--minlen MINLEN] [--maxlen MAXLEN] [--minqual MINQUAL] [--maxqual MAXQUAL]
-    2. example ==> python3 -m src.cli -i datas/example.fasta -f fasta -o 1.txt --maxlen 20
+    ?. poetry run python3 -m src.biofile_manager.cli [-h] -i INPUT -f {fasta,fastq} [-o OUTPUT] [--minlen <number>] [--maxlen <number>] [--minqual <number>] [--maxqual <number>]
+    2. example ==> poetry run python3 -m src.biofile_manager.cli -i datas/example.fasta -f fasta -o 1.png --minlen 20 

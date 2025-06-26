@@ -1,11 +1,11 @@
 import argparse
 import os
 
-from parsers.fasta_parser import parse_fasta
-from parsers.fastq_parser import parse_fastq
+from src.biofile_manager.parsers.fasta_parser import parse_fasta
+from src.biofile_manager.parsers.fastq_parser import parse_fastq
 
-from utils.stats import summarize_fasta, summarize_fastq
-from utils.filters import filter_by_length, filter_by_quality
+from src.biofile_manager.utils.stats import summarize_fasta, summarize_fastq
+from src.biofile_manager.utils.filters import filter_by_length, filter_by_quality
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
         summarize_fasta(records)
 
         if args.output:
-            from utils.export import export_fasta
+            from src.biofile_manager.utils.export import export_fasta
 
             export_fasta(records, output_path)
             print(f"Exported to {output_path}")
@@ -50,7 +50,7 @@ def main():
         summarize_fastq(records)
 
         if args.output:
-            from utils.export import export_fastq
+            from src.biofile_manager.utils.export import export_fastq
 
             export_fastq(records, output_path)
             print(f"Exported to {output_path}")

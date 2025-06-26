@@ -1,5 +1,5 @@
 import os
-from parsers.fasta_parser import parse_fasta
+from src.biofile_manager.parsers.fasta_parser import parse_fasta
 from utils.stats import summarize_fasta
 
 
