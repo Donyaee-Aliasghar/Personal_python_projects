@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # find output data directory
-output_dir = os.path.join(os.path.dirname(__file__), "results")
+output_dir = os.path.join(os.path.dirname(__file__), "..", "..", "results")
 os.makedirs(output_dir, exist_ok=True)
 
 # load datas
