@@ -1,5 +1,5 @@
 import os
-from parsers.fastq_parser import parse_fastq
+from src.biofile_manager.parsers.fastq_parser import parse_fastq
 
 
 def Test_parser_fastq():
