@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Managed bioinformatics files"
 authors = ["Donyaee-Aliasghar <donyaeealiasghar@gmail.com>"]
 readme = "README.md"
-packages = [{include = "Biofile_manager", from = "src"}]
+packages = [{include = "biofile_manager", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.12"
