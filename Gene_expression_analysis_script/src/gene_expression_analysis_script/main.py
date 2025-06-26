@@ -8,7 +8,7 @@ output_dir = os.path.join(os.path.dirname(__file__), "results")
 os.makedirs(output_dir, exist_ok=True)
 
 # load datas
-csv_path = os.path.join(os.path.dirname(__file__), "datas", "CSV_files", "gene_expression_data.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "..", "..", "datas", "CSV_files", "gene_expression_data.csv")
 rpc = pd.read_csv(csv_path)
 
 # define expression columns

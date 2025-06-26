@@ -1,18 +1,16 @@
-[project]
-name = "gene-expression-analysis-script"
-version = "0.1.0"
-description = "project for analysis gene sequences"
-authors = [
-    {name = "Donyaee-Aliasghar",email = "donyaeealiasghar@gmail.com"}
-]
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-]
-
 [tool.poetry]
-packages = [{include = "gene_expression_analysis_script", from = "src"}]
+name = "gene_expression_analysis_script"
+version = "0.1.0"
+description = ""
+authors = ["Donyaee-Aliasghar <donyaeealiasghar@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "gene_expression_analysis_script", from = "src" }]
 
+[tool.poetry.dependencies]
+python = ">=3.12"
+pandas = "^2.3.0"
+matplotlib = "^3.10.3"
+seaborn = "^0.13.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
