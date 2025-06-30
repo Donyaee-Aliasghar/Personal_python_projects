@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "biosql"
 version = "0.1.0"
-description = ""
+description = "Building a full-fledged project to perform operations on DNA sequences"
 authors = ["Donyaee-Aliasghar <donyaeealiasghar@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-
+pandas = "^2.3.0"
 
 [build-system]
 requires = ["poetry-core"]
