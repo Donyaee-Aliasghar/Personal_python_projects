@@ -1,6 +1,5 @@
 import click
 import time
-import networkx as nx
 
 from db import (
     connect_db,
@@ -14,7 +13,7 @@ from db import (
 )
 from rich.progress import Progress
 from analysis import count_nucleotides, gc_content, reverse_complement, get_all_orfs, transcribe_dna_to_rna
-from graph_utils import build_bio_graph, export_graph
+from graph_utils import build_bio_graph, export_graph, draw_graph
 
 
 @click.group()
@@ -24,8 +23,8 @@ def cli():
 
 @cli.command()
 def initdb():
-    con = connect_db()
-    create_tables(con)
+    conn = connect_db()
+    create_tables(conn)
     # show colored progress
     with Progress() as progress:
         task = progress.add_task("[cyan]Creating database...", total=100)
@@ -33,7 +32,7 @@ def initdb():
             progress.update(task, advance=1)
             time.sleep(0.03)
     click.echo(click.style("Database and Tables create successfuly", fg="green", bold=True))
-    con.close()
+    conn.close()
 
 
 @cli.command(name="add-organism")
@@ -94,6 +93,15 @@ def add_feature_cmd(accession, feature_type, start_pos, end_pos, strand):
     conn.close()
 
 
+def ensure_column_exists(conn, table_name, column_name, column_type):
+    cursor = conn.cursor()
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns = [row[1] for row in cursor.fetchall()]
+    if column_name not in columns:
+        cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
+        conn.commit()
+
+
 @cli.command(name="analyze-sequence")
 @click.option("--accession", prompt="Sequence accession", help="Accession of sequence to analyze.")
 @click.option("--save", is_flag=True, help="Save analysis results in the database.")
@@ -105,31 +113,38 @@ def analyze_sequence_cmd(accession, save, export):
         click.echo(click.style("Sequence not found.", fg="red", bold=True))
         return
 
-    seq = seq_row[4]
-
+    seq = seq_row[4]  # seq_dna
     counts = count_nucleotides(seq)
     gc = gc_content(seq)
     rev_comp = reverse_complement(seq)
     rna = transcribe_dna_to_rna(seq)
 
-    click.echo(click.style(f"\nAnalysis of sequence '{accession}':", bold=True))
-    click.echo(f"Counts: {counts}")
-    click.echo(f"GC Content: {gc}%")
-    click.echo(f"Reverse Complement: {rev_comp}")
-    click.echo(f"Transcribed RNA: {rna}")
+    click.echo(click.style(f"\nAnalysis of sequence '{accession}':", fg="white", bold=True))
+    click.echo(click.style(f"Counts: {counts}", fg="magenta"))
+    click.echo(click.style(f"GC Content: {gc:.2f}%", fg="magenta"))
+    click.echo(click.style(f"Reverse Complement: {rev_comp}", fg="magenta"))
+    click.echo(click.style(f"Transcribed RNA: {rna}", fg="magenta"))
 
     if save:
+        ensure_column_exists(conn, "sequence", "gc_content", "REAL")
+        ensure_column_exists(conn, "sequence", "rev_complement", "TEXT")
+        ensure_column_exists(conn, "sequence", "transcribed_rna", "TEXT")
+
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE sequence SET gc_content=?, rev_complement=?, transcribed_rna=? WHERE accession=?",
+            """
+            UPDATE sequence
+            SET gc_content = ?, rev_complement = ?, transcribed_rna = ?
+            WHERE accession = ?
+            """,
             (gc, rev_comp, rna, accession),
         )
         conn.commit()
-        click.echo(click.style("The analysis was saved in the database.", fg="green", bold=True))
+        click.echo(click.style("✅ Analysis results saved to database.", fg="green", bold=True))
 
     if export:
         export_analysis_to_markdown(accession, counts, gc, rev_comp, rna, export)
-        click.echo(click.style(f"Report saved in {export}.", fg="blue", bold=True))
+        click.echo(click.style(f"Report saved to {export}.", fg="green", bold=True))
 
     conn.close()
 
@@ -145,7 +160,7 @@ def list_sequences_cmd():
     else:
         click.echo(click.style("\nsequence lists:\n", bold=True))
         for acc, desc in rows:
-            click.echo(f"🔹 {acc}: {desc}")
+            click.echo(f"## {acc}: {desc}")
     conn.close()
 
 
@@ -157,19 +172,19 @@ def view_sequence_cmd(accession):
     if not seq:
         click.echo(click.style("Sequence not found.", fg="red", bold=True))
         return
-    click.echo(click.style(f"\nSequence information'{accession}':", bold=True))
-    click.echo(f"Description: {seq[3]}")
-    click.echo(f"Sequence: {seq[4]}")
-    click.echo(f"Alphabet: {seq[5]}")
-    click.echo(f"GC Content: {seq[6]}")
-    click.echo(f"Reverse Complement: {seq[7]}")
-    click.echo(f"Transcribed RNA: {seq[8]}")
+    click.echo(click.style(f"\nSequence information'{accession}':", fg="white", bold=True))
+    click.echo(click.style(f"Description: {seq[3]}", fg="magenta"))
+    click.echo(click.style(f"Sequence: {seq[4]}", fg="magenta"))
+    click.echo(click.style(f"Alphabet: {seq[5]}", fg="magenta"))
+    click.echo(click.style(f"GC Content: {seq[6]}", fg="magenta"))
+    click.echo(click.style(f"Reverse Complement: {seq[7]}", fg="magenta"))
+    click.echo(click.style(f"Transcribed RNA: {seq[8]}", fg="magenta"))
     conn.close()
 
 
 @cli.command(name="find-orfs")
 @click.option("--accession", prompt="Sequence accession", help="Sequence accession for ORF search")
-@click.option("--min-length", default=100, help="Minimum length of ORF (in amino acids)")
+@click.option("--min-length", default=10, help="Minimum length of ORF (in amino acids)")
 @click.option("--top", default=3, help="How many top ORFs to display")
 def find_orfs_cmd(accession, min_length, top):
     conn = connect_db()
@@ -184,10 +199,10 @@ def find_orfs_cmd(accession, min_length, top):
         click.echo(click.style("No valid ORF found.", fg="red", bold=True))
         return
 
-    click.echo(click.style(f"\n🔍 Found {len(orfs)} ORFs (top {top} shown):\n", bold=True))
+    click.echo(click.style(f"\nFound {len(orfs)} ORFs (top {top} shown):\n", bold=True))
     for i, orf in enumerate(orfs[:top]):
         click.echo(f"{i+1}. Frame: {orf['frame']} ({orf['strand']}), Length: {orf['length']} aa")
-        click.echo(f"   Protein: {orf['orf_protein'][:60]}...\n")
+        click.echo(f"Protein: {orf['orf_protein'][:60]}...\n")
     conn.close()
 
 
@@ -195,9 +210,9 @@ def find_orfs_cmd(accession, min_length, top):
 def show_graph_info_cmd():
     conn = connect_db()
     G = build_bio_graph(conn)
-    click.echo(click.style("📊 BioGraph Summary:", bold=True))
-    click.echo(f"🔹 Nodes: {G.number_of_nodes()}")
-    click.echo(f"🔹 Edges: {G.number_of_edges()}")
+    click.echo(click.style("BioGraph Summary:", bold=True))
+    click.echo(f"## Nodes: {G.number_of_nodes()}")
+    click.echo(f"## Edges: {G.number_of_edges()}")
 
     from collections import Counter
 
@@ -209,15 +224,24 @@ def show_graph_info_cmd():
 
 
 @cli.command(name="export-graph")
-@click.option("--outdir", default="results", help="پوشه ذخیره فایل‌های گراف.")
+@click.option("--outdir", default="results", help="Folder where graph files are stored.")
 def export_graph_cmd(outdir):
-    """خروجی گرفتن گراف در فرمت‌های GraphML, GML, JSON"""
     conn = connect_db()
     G = build_bio_graph(conn)
     paths = export_graph(G, output_dir=outdir)
-    click.echo(click.style("✅ Graph exported successfully!", fg="green", bold=True))
+    click.echo(click.style("Graph exported successfully!", fg="green", bold=True))
     for fmt, path in paths.items():
-        click.echo(f"📁 {fmt.upper()}: {path}")
+        click.echo(f"## {fmt.upper()}: {path}")
+    conn.close()
+
+
+@cli.command(name="draw-graph")
+@click.option("--out", default="results/graph_plot.png", help="The path to save the graph image file.")
+def draw_graph_cmd(out):
+    conn = connect_db()
+    G = build_bio_graph(conn)
+    path = draw_graph(G, save_path=out)
+    click.echo(click.style(f"Graph saved: {path}", fg="green"))
     conn.close()
 
 

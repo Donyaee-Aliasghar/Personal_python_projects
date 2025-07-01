@@ -56,6 +56,7 @@ def get_all_orfs(seq, min_length=100):
                     current_orf += aa
     return sorted(orfs, key=lambda x: x["length"], reverse=True)
 
+
 def get_best_orf(seq):
     orfs = get_all_orfs(seq)
     return orfs[0] if orfs else None

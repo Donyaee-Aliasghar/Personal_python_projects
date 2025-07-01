@@ -10,6 +10,9 @@ python = "^3.12"
 click = "^8.1.7"
 rich = "^14.0.0"
 pytest = "^8.4.1"
+matplotlib = "^3.10.3"
+networkx = "^3.5"
+biopython = "^1.85"
 
 [build-system]
 requires = ["poetry-core"]

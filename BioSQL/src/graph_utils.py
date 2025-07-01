@@ -1,5 +1,7 @@
-import networkx as nx
 import os
+import networkx as nx
+import matplotlib.pyplot as plt
+
 
 def build_bio_graph(conn):
     G = nx.DiGraph()
@@ -42,10 +44,28 @@ def export_graph(G, output_dir="results"):
     data = nx.readwrite.json_graph.node_link_data(G)
     with open(json_path, "w") as f:
         import json
+
         json.dump(data, f, indent=2)
 
-    return {
-        "graphml": graphml_path,
-        "gml": gml_path,
-        "json": json_path
-    }
+    return {"graphml": graphml_path, "gml": gml_path, "json": json_path}
+
+
+def draw_graph(G, save_path="results/graph_plot.png"):
+    pos = nx.spring_layout(G, seed=42)
+    labels = nx.get_node_attributes(G, "label")
+
+    color_map = {"organism": "skyblue", "sequence": "lightgreen", "feature": "salmon"}
+    node_colors = [color_map.get(labels.get(node, "unknown"), "gray") for node in G.nodes]
+
+    plt.figure(figsize=(12, 8))
+    nx.draw_networkx(G, pos, with_labels=False, node_color=node_colors, node_size=600, edge_color="gray", alpha=0.8)
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(BASE_DIR, "results")
+    nx.draw_networkx_labels(G, pos, labels={n: n for n in G.nodes}, font_size=8)
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig(save_path)
+    # plt.savefig(path)
+    plt.close()
+    return save_path
