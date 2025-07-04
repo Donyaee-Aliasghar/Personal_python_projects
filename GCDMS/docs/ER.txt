@@ -1,0 +1,5 @@
+[users] 1 --- 0..1 [patients]
+[patients] 1 --- N [clinical_records]
+[patients] 1 --- N [genetic_samples]
+[genetic_samples] 1 --- N [genetic_variants]
+[genetic_samples] 1 --- N [analysis_results]
