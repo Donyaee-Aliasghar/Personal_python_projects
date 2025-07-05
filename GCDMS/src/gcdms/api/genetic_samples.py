@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from gcdms.schemas import GeneticSample as sGeneticSample, GeneticSampleCreate as sGeneticSampleCreate
-from gcdms.crud import create_genetic_samples
-from gcdms.dependencies import get_db
+from src.gcdms.schemas import GeneticSample as sGeneticSample, GeneticSampleCreate as sGeneticSampleCreate
+from src.gcdms.crud import create_genetic_samples
+from src.gcdms.dependencies import get_db
 
 router = APIRouter(prefix="/genetic_samples", tags=["genetic_samples"])
 

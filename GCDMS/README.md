@@ -29,3 +29,6 @@ Including chromosomal location, alleles, impact and description.
 6.AnalysisResult:
 Results of various analyses on samples
 Including analysis type, result in JSON format and recording date.
+
+=================== how to run ====================
+1.poetry run uvicorn src.gcdms.main:app --reload

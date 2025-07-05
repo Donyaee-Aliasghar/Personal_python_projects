@@ -1,7 +1,10 @@
+import pysam
+from Bio import SeqIO
+
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from passlib.context import CryptContext
-from . import schemas
+import schemas, models
 from gcdms.models import (
     User as mUser,
     Patient as mPatient,
@@ -100,3 +103,24 @@ async def create_analysis_results(db: AsyncSession, analysisresults: schemas.Ana
     await db.commit()
     await db.refresh(db_analysisresults)
     return db_analysisresults
+
+
+async def process_vcf_file(filepath: str, db: AsyncSession):
+    vcf_reader = vcf.Reader(filename=filepath)
+    variants_added = 0
+
+    for record in vcf_reader:
+        variant = models.GeneticVariant(
+            sample_id=1,
+            chromosome=record.CHROM,
+            position=record.POS,
+            ref_allele=record.REF,
+            alt_allele=",".join(str(alt) for alt in record.ALT),
+            impact=None,
+            annotation=None,
+        )
+        db.add(variant)
+        variants_added += 1
+
+    await db.commit()
+    return f"{variants_added} variants added to database."

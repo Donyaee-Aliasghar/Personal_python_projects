@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from gcdms.schemas import GeneticVariant as sGeneticVariant, GeneticVariantCreate as sGeneticVariantCreate
-from gcdms.crud import create_genetic_variants
-from gcdms.dependencies import get_db
+from src.gcdms.schemas import GeneticVariant as sGeneticVariant, GeneticVariantCreate as sGeneticVariantCreate
+from src.gcdms.crud import create_genetic_variants
+from src.gcdms.dependencies import get_db
 
 router = APIRouter(prefix="/genetic_variants", tags=["genetic_variants"])
 
