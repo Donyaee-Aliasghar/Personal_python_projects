@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.gcdms.schemas import AnalysisResult as sAnalysisResult, AnalysisResultCreate as sAnalysisResultCreate
-from src.gcdms.crud import create_analysis_results
-from src.gcdms.dependencies import get_db
+from ..schemas import AnalysisResult as sAnalysisResult, AnalysisResultCreate as sAnalysisResultCreate
+from ..crud import create_analysis_results
+from ..dependencies import get_db
 
 router = APIRouter(prefix="/analysis_results", tags=["analysis_results"])
 

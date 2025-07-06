@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.gcdms.schemas import User as sUser, UserCreate as sUserCreate
-from src.gcdms.crud import get_user_by_username, create_user
-from src.gcdms.dependencies import get_db
+from ..schemas import User as sUser, UserCreate as sUserCreate
+from ..crud import get_user_by_username, create_user
+from ..dependencies import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
 

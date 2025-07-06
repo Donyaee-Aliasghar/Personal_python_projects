@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.gcdms.schemas import ClinicalRecord as sClinicalRecord, ClinicalRecordCreate as sClinicalRecordCreate
-from src.gcdms.crud import create_clinical_records
-from src.gcdms.dependencies import get_db
+from ..schemas import ClinicalRecord as sClinicalRecord, ClinicalRecordCreate as sClinicalRecordCreate
+from ..crud import create_clinical_records
+from ..dependencies import get_db
 
 router = APIRouter(prefix="/clinical_records", tags=["clinical_records"])
 

@@ -3,8 +3,8 @@ import os
 
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.gcdms.dependencies import get_db
-from src.gcdms.crud import process_vcf_file
+from ..dependencies import get_db
+from ..crud import process_vcf_file
 
 router = APIRouter(prefix="/files", tags=["files"])
 

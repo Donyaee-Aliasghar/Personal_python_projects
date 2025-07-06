@@ -20,7 +20,7 @@ class User(UserBase):
     created_at: datetime.datetime
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class PatientBase(BaseModel):
@@ -41,7 +41,7 @@ class Patient(PatientBase):
     genetic_samples: List["GeneticSample"] = []
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class ClinicalRecordBase(BaseModel):
@@ -61,7 +61,7 @@ class ClinicalRecord(ClinicalRecordBase):
     created_at: datetime.datetime
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class GeneticSampleBase(BaseModel):
@@ -82,7 +82,7 @@ class GeneticSample(GeneticSampleBase):
     analysis_results: List["AnalysisResult"] = []
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class GeneticVariantBase(BaseModel):
@@ -104,7 +104,7 @@ class GeneticVariant(GeneticVariantBase):
     created_at: datetime.datetime
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class AnalysisResultBase(BaseModel):
@@ -123,4 +123,4 @@ class AnalysisResult(AnalysisResultBase):
     updated_at: datetime.datetime
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}

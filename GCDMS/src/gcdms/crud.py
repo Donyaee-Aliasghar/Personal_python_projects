@@ -4,8 +4,15 @@ from Bio import SeqIO
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from passlib.context import CryptContext
-import schemas, models
-from gcdms.models import (
+from .schemas import (
+    UserCreate,
+    PatientCreate,
+    ClinicalRecordCreate,
+    GeneticSampleCreate,
+    GeneticVariantCreate,
+    AnalysisResultCreate,
+)
+from .models import (
     User as mUser,
     Patient as mPatient,
     ClinicalRecord as mClinicalRecord,
@@ -26,7 +33,7 @@ async def get_user_by_username(db: AsyncSession, username: str):
     return result.scalars().first()
 
 
-async def create_user(db: AsyncSession, user: schemas.UserCreate):
+async def create_user(db: AsyncSession, user: UserCreate):
     hashed_password = get_password_hash(user.password)
     db_user = mUser(
         username=user.username,
@@ -45,7 +52,7 @@ async def get_patient(db: AsyncSession, patient_id: int):
     return result.scalars().first()
 
 
-async def create_patient(db: AsyncSession, patient: schemas.PatientCreate):
+async def create_patient(db: AsyncSession, patient: PatientCreate):
     db_patient = mPatient(**patient.dict())
     db.add(db_patient)
     await db.commit()
@@ -58,7 +65,7 @@ async def get_genetic_variants(db: AsyncSession, geneticvariant_id: int):
     return result.scalars().first()
 
 
-async def create_genetic_variants(db: AsyncSession, geneticvariant: schemas.GeneticVariantCreate):
+async def create_genetic_variants(db: AsyncSession, geneticvariant: GeneticVariantCreate):
     db_geneticvariant = mGeneticVariant(**geneticvariant.dict())
     db.add(db_geneticvariant)
     await db.commit()
@@ -71,7 +78,7 @@ async def get_genetic_samples(db: AsyncSession, geneticsample_id: int):
     return result.scalars().first()
 
 
-async def create_genetic_samples(db: AsyncSession, geneticsample: schemas.GeneticSampleCreate):
+async def create_genetic_samples(db: AsyncSession, geneticsample: GeneticSampleCreate):
     db_geneticsample = mGeneticSample(**geneticsample.dict())
     db.add(db_geneticsample)
     await db.commit()
@@ -84,7 +91,7 @@ async def get_clinical_records(db: AsyncSession, clinicalrecords_id: int):
     return result.scalars().first()
 
 
-async def create_clinical_records(db: AsyncSession, clinicalrecords: schemas.ClinicalRecordCreate):
+async def create_clinical_records(db: AsyncSession, clinicalrecords: ClinicalRecordCreate):
     db_clinicalrecords = mClinicalRecord(**clinicalrecords.dict())
     db.add(db_clinicalrecords)
     await db.commit()
@@ -97,7 +104,7 @@ async def create_analysis_results(db: AsyncSession, analysisresults_id: int):
     return result.scalars().first()
 
 
-async def create_analysis_results(db: AsyncSession, analysisresults: schemas.AnalysisResultCreate):
+async def create_analysis_results(db: AsyncSession, analysisresults: AnalysisResultCreate):
     db_analysisresults = mAnalysisResult(**analysisresults.dict())
     db.add(db_analysisresults)
     await db.commit()
@@ -106,16 +113,19 @@ async def create_analysis_results(db: AsyncSession, analysisresults: schemas.Ana
 
 
 async def process_vcf_file(filepath: str, db: AsyncSession):
-    vcf_reader = vcf.Reader(filename=filepath)
+    vcf_reader = pysam.VariantFile(filepath)
+
     variants_added = 0
 
     for record in vcf_reader:
-        variant = models.GeneticVariant(
+        alt_alleles = [str(alt) for alt in record.alts] if record.alts else []
+
+        variant = mGeneticVariant(
             sample_id=1,
-            chromosome=record.CHROM,
-            position=record.POS,
-            ref_allele=record.REF,
-            alt_allele=",".join(str(alt) for alt in record.ALT),
+            chromosome=str(record.contig),  # CHROM
+            position=record.pos,  # POS
+            ref_allele=record.ref,  # REF
+            alt_allele=",".join(alt_alleles),  # ALT
             impact=None,
             annotation=None,
         )
@@ -124,3 +134,23 @@ async def process_vcf_file(filepath: str, db: AsyncSession):
 
     await db.commit()
     return f"{variants_added} variants added to database."
+
+
+# async def process_fasta_file(filepath: str, db: AsyncSession):
+#     fasta = pysam.FastaFile(filepath)
+#     sequences_added = 0
+
+#     for seq_name in fasta.references:
+#         sequence = fasta.fetch(seq_name)
+
+#         seq_record = GeneticSequence(
+#             sample_id=1,
+#             header=seq_name,
+#             sequence=sequence,
+#         )
+
+#         db.add(seq_record)
+#         sequences_added += 1
+
+#     await db.commit()
+#     return f"{sequences_added} sequences added to database."
