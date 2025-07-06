@@ -1,12 +1,24 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas import GeneticVariant as sGeneticVariant, GeneticVariantCreate as sGeneticVariantCreate
-from ..crud import create_genetic_variants
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from typing import List
+
+from ..schemas.genetic_variant import GeneticVariantCreate, GeneticVariantOut
+from ..crud.genetic_variant import create_variant, get_variant, get_variants
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/genetic_variants", tags=["genetic_variants"])
+router = APIRouter(prefix="/genetic-variants", tags=["GeneticVariants"])
 
 
-@router.post("/", response_model=sGeneticVariant, status_code=status.HTTP_201_CREATED)
-async def create_genetic_variants(genetic_variants: sGeneticVariantCreate, db: AsyncSession = Depends(get_db)):
-    return await create_genetic_variants(db=db, genetic_variants=genetic_variants)
+@router.post("/", response_model=GeneticVariantOut)
+def create_variant(variant: GeneticVariantCreate, db: Session = Depends(get_db)):
+    return create_variant(db, variant)
+
+
+@router.get("/{variant_id}", response_model=GeneticVariantOut)
+def read_variant(variant_id: int, db: Session = Depends(get_db)):
+    return get_variant(db, variant_id)
+
+
+@router.get("/", response_model=List[GeneticVariantOut])
+def read_variants(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return get_variants(db, skip=skip, limit=limit)

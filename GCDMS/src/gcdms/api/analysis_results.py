@@ -1,12 +1,24 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas import AnalysisResult as sAnalysisResult, AnalysisResultCreate as sAnalysisResultCreate
-from ..crud import create_analysis_results
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from typing import List
+
+from ..schemas.analysis_result import AnalysisResultCreate, AnalysisResultOut
+from ..crud.analysis_result import create_result, get_result, get_results
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/analysis_results", tags=["analysis_results"])
+router = APIRouter(prefix="/analysis-results", tags=["AnalysisResults"])
 
 
-@router.post("/", response_model=sAnalysisResult, status_code=status.HTTP_201_CREATED)
-async def create_analysis_results(analysis_results: sAnalysisResultCreate, db: AsyncSession = Depends(get_db)):
-    return await create_analysis_results(db=db, analysis_results=analysis_results)
+@router.post("/", response_model=AnalysisResultOut)
+def create_result(result: AnalysisResultCreate, db: Session = Depends(get_db)):
+    return create_result(db, result)
+
+
+@router.get("/{result_id}", response_model=AnalysisResultOut)
+def read_result(result_id: int, db: Session = Depends(get_db)):
+    return get_result(db, result_id)
+
+
+@router.get("/", response_model=List[AnalysisResultOut])
+def read_results(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return get_results(db, skip=skip, limit=limit)

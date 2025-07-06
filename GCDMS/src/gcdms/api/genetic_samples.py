@@ -1,12 +1,24 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas import GeneticSample as sGeneticSample, GeneticSampleCreate as sGeneticSampleCreate
-from ..crud import create_genetic_samples
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from typing import List
+
+from ..schemas.genetic_sample import GeneticSampleCreate, GeneticSampleOut
+from ..crud.genetic_sample import create_sample, get_sample, get_samples
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/genetic_samples", tags=["genetic_samples"])
+router = APIRouter(prefix="/genetic-samples", tags=["GeneticSamples"])
 
 
-@router.post("/", response_model=sGeneticSample, status_code=status.HTTP_201_CREATED)
-async def create_genetic_samples(genetic_samples: sGeneticSampleCreate, db: AsyncSession = Depends(get_db)):
-    return await create_genetic_samples(db=db, genetic_samples=genetic_samples)
+@router.post("/", response_model=GeneticSampleOut)
+def create_sample(sample: GeneticSampleCreate, db: Session = Depends(get_db)):
+    return create_sample(db, sample)
+
+
+@router.get("/{sample_id}", response_model=GeneticSampleOut)
+def read_sample(sample_id: int, db: Session = Depends(get_db)):
+    return get_sample(db, sample_id)
+
+
+@router.get("/", response_model=List[GeneticSampleOut])
+def read_samples(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return get_samples(db, skip=skip, limit=limit)

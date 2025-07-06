@@ -1,12 +1,24 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas import ClinicalRecord as sClinicalRecord, ClinicalRecordCreate as sClinicalRecordCreate
-from ..crud import create_clinical_records
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from typing import List
+
+from ..schemas.clinical_record import ClinicalRecordCreate, ClinicalRecordOut
+from ..crud.clinical_record import create_record, get_record, get_records
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/clinical_records", tags=["clinical_records"])
+router = APIRouter(prefix="/clinical-records", tags=["ClinicalRecords"])
 
 
-@router.post("/", response_model=sClinicalRecord, status_code=status.HTTP_201_CREATED)
-async def create_clinical_records(clinical_records: sClinicalRecordCreate, db: AsyncSession = Depends(get_db)):
-    return await create_clinical_records(db=db, clinical_records=clinical_records)
+@router.post("/", response_model=ClinicalRecordOut)
+def create_clinical_record(record: ClinicalRecordCreate, db: Session = Depends(get_db)):
+    return create_record(db, record)
+
+
+@router.get("/{record_id}", response_model=ClinicalRecordOut)
+def read_clinical_record(record_id: int, db: Session = Depends(get_db)):
+    return get_record(db, record_id)
+
+
+@router.get("/", response_model=List[ClinicalRecordOut])
+def read_clinical_records(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return get_records(db, skip=skip, limit=limit)
