@@ -6,7 +6,7 @@ from ..schemas.clinical_record import ClinicalRecordCreate, ClinicalRecordOut
 from ..crud.clinical_record import create_record, get_record, get_records
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/clinical-records", tags=["ClinicalRecords"])
+router = APIRouter(prefix="/clinical-records", tags=["Clinical records"])
 
 
 @router.post("/", response_model=ClinicalRecordOut)

@@ -10,7 +10,7 @@ router = APIRouter(prefix="/patients", tags=["Patients"])
 
 
 @router.post("/", response_model=PatientOut)
-def create_patient(patient: PatientCreate, db: Session = Depends(get_db)):
+def create_patient_endpoint(patient: PatientCreate, db: Session = Depends(get_db)):
     return create_patient(db, patient)
 
 

@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional
-
+from datetime import date
 
 class GeneticSampleBase(BaseModel):
     patient_id: int
     sample_type: Optional[str] = None
-    collected_at: Optional[str] = None
+    sample_date: Optional[date] = None
 
 
 class GeneticSampleCreate(GeneticSampleBase):

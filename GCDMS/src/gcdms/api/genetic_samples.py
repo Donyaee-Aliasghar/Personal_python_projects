@@ -6,11 +6,11 @@ from ..schemas.genetic_sample import GeneticSampleCreate, GeneticSampleOut
 from ..crud.genetic_sample import create_sample, get_sample, get_samples
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/genetic-samples", tags=["GeneticSamples"])
+router = APIRouter(prefix="/genetic-samples", tags=["Genetic samples"])
 
 
 @router.post("/", response_model=GeneticSampleOut)
-def create_sample(sample: GeneticSampleCreate, db: Session = Depends(get_db)):
+def create_sample_endpoint(sample: GeneticSampleCreate, db: Session = Depends(get_db)):
     return create_sample(db, sample)
 
 

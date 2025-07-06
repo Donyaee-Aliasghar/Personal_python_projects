@@ -6,11 +6,11 @@ from ..schemas.genetic_variant import GeneticVariantCreate, GeneticVariantOut
 from ..crud.genetic_variant import create_variant, get_variant, get_variants
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/genetic-variants", tags=["GeneticVariants"])
+router = APIRouter(prefix="/genetic-variants", tags=["Genetic variants"])
 
 
 @router.post("/", response_model=GeneticVariantOut)
-def create_variant(variant: GeneticVariantCreate, db: Session = Depends(get_db)):
+def create_variant_endpoint(variant: GeneticVariantCreate, db: Session = Depends(get_db)):
     return create_variant(db, variant)
 
 

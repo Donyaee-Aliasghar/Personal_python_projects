@@ -6,11 +6,11 @@ from ..schemas.analysis_result import AnalysisResultCreate, AnalysisResultOut
 from ..crud.analysis_result import create_result, get_result, get_results
 from ..dependencies import get_db
 
-router = APIRouter(prefix="/analysis-results", tags=["AnalysisResults"])
+router = APIRouter(prefix="/analysis-results", tags=["Analysis results"])
 
 
 @router.post("/", response_model=AnalysisResultOut)
-def create_result(result: AnalysisResultCreate, db: Session = Depends(get_db)):
+def create_result_endpoint(result: AnalysisResultCreate, db: Session = Depends(get_db)):
     return create_result(db, result)
 
 

@@ -31,4 +31,7 @@ Results of various analyses on samples
 Including analysis type, result in JSON format and recording date.
 
 =================== how to run ====================
-1.poetry run uvicorn src.gcdms.main:app --reload
++. poetry run uvicorn src.gcdms.main:app --reload
+=================== how to test ====================
++. config test ==> poetry run pytest 
++. api tests ==> pytest tests/test_*.py
