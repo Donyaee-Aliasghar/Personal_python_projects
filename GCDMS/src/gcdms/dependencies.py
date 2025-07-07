@@ -1,9 +1,10 @@
 # Defining Dependency to get Database Session
 
-from typing import AsyncGenerator
 from .database import async_session
+from contextlib import asynccontextmanager
 
 
-async def get_db() -> AsyncGenerator:
+@asynccontextmanager
+async def get_db():
     async with async_session() as session:
         yield session

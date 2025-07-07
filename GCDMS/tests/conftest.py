@@ -1,53 +1,60 @@
+# conftest.py
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+import pytest_asyncio
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from src.gcdms.main import app
 from src.gcdms.database import Base
 from src.gcdms.dependencies import get_db
 
-# shared in-memory SQLite
-SQLALCHEMY_DATABASE_URL = "sqlite:///file::memory:?cache=shared"
+# آدرس پایگاه‌داده تستی
+DATABASE_TEST_URL = "postgresql+asyncpg://postgres:password@localhost:5432/test_db"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False, "uri": True},
-)
-TestingSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+# ساخت engine async
+engine = create_async_engine(DATABASE_TEST_URL, echo=False)
 
-
-@pytest.fixture(scope="session", autouse=True)
-def prepare_database():
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)
+# ساخت session factory برای تست
+TestingSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 
-def override_get_db():
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# override dependency برای get_db
+async def override_get_db():
+    async with TestingSessionLocal() as session:
+        yield session
 
 
+# اعمال override
 app.dependency_overrides[get_db] = override_get_db
 
 
-@pytest.fixture(scope="module")
-def client():
-    with TestClient(app) as c:
-        yield c
+# تعیین backend برای anyio
+@pytest.fixture(scope="session")
+def anyio_backend():
+    return "asyncio"
 
 
-@pytest.fixture(autouse=True)
-def clear_tables():
+# ساخت/حذف جدول‌ها برای کل تست‌ها
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def prepare_database():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
-    from src.gcdms.database import Base
-    from src.gcdms.dependencies import get_db
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
-    db = next(override_get_db())
-    for table in reversed(Base.metadata.sorted_tables):
-        db.execute(table.delete())
-    db.commit()
+
+# کلاینت async-safe
+@pytest_asyncio.fixture
+async def client():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+
+
+# پاک‌سازی داده‌ها قبل از هر تست
+@pytest_asyncio.fixture(autouse=True)
+async def clear_tables():
+    async with engine.begin() as conn:
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(table.delete())

@@ -7,6 +7,7 @@ from .api.genetic_variants import router as gvrouter
 from .api.genetic_samples import router as gsrouter
 from .api.clinical_records import router as crrouter
 from .api.analysis_results import router as arrouter
+from .api.auth import router as aurouter
 
 # from .api.files import router as frouter
 
@@ -19,6 +20,7 @@ app.include_router(gvrouter)
 app.include_router(gsrouter)
 app.include_router(crrouter)
 app.include_router(arrouter)
+app.include_router(aurouter)
 # app.include_router(frouter)
 
 
