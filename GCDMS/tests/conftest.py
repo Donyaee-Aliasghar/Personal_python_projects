@@ -10,13 +10,13 @@ from src.gcdms.database import Base
 from src.gcdms.dependencies import get_db
 
 # آدرس پایگاه‌داده تستی
-DATABASE_TEST_URL = "postgresql+asyncpg://postgres:password@localhost:5432/test_db"
+DATABASE_TEST_URL = "postgresql+asyncpg://postgres:password123@localhost:5432/postgres"
 
 # ساخت engine async
 engine = create_async_engine(DATABASE_TEST_URL, echo=False)
 
 # ساخت session factory برای تست
-TestingSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+TestingSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_owssween_commit=False)
 
 
 # override dependency برای get_db
