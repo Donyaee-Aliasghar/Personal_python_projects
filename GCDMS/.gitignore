@@ -1,5 +1,0 @@
-__pycache__/
-poetry.lock
-*.pyc
-.pytest*
-.env
