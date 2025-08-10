@@ -5,7 +5,7 @@ from pathlib import Path
 # current python file path.
 CURRENT_FILE = Path(__file__).resolve()
 
-#! this paths is in my system.
+#! this paths is in my system(please comment this part and use below codes).
 # get raw datas folder.
 MAIN_RAW_DATAS_FOLDER = CURRENT_FILE.parent.parent.parent.parent.parent.parent
 MAIN_RAW_FILE = MAIN_RAW_DATAS_FOLDER / "Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
