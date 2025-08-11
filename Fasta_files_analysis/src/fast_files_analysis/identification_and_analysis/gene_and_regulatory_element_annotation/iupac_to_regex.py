@@ -1,6 +1,6 @@
 """Module for converting iupac codes to regex data."""
 
-from .data.IUPAC_codes import iupac_codes
+from .datas.IUPAC_codes import iupac_codes
 
 def itr(seq) -> str:
     """operation."""

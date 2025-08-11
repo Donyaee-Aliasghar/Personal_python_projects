@@ -5,7 +5,7 @@ from typing import List
 from .read_fasta import rf
 from .kmp_algorithm import main as kmpa_main
 from .sequence_search_and_calculate import main as aks_main
-from .data.famous_repetitive_sequences import known_sequences as ks
+from .datas.famous_repetitive_sequences import known_sequences as ks
 
 
 def rn(pure_file: str) -> None:

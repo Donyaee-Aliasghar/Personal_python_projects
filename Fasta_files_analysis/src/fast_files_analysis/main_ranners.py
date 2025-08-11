@@ -12,7 +12,7 @@ def mrn():
     pf()
 
     # repeat regions and interspersed repeats operations.
-    # rrn(PS_FILE)
+    rrn(PS_FILE)
 
     # gene_and_regulatory_element_annotation operations.
-    # grn(PS_FILE)
+    grn(PS_FILE)
