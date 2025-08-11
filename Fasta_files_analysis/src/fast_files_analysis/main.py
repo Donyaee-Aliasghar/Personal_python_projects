@@ -2,7 +2,7 @@
 
 import time
 
-from .ranners import rn
+from ranners import rn
 
 if __name__ == "__main__":
     # Processing time file.

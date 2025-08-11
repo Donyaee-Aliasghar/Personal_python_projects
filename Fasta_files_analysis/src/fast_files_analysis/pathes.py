@@ -5,10 +5,9 @@ from pathlib import Path
 # Current python file path.
 CURRENT_FILE = Path(__file__).resolve()
 
-# =================== This part mine. ============================
-MAIN_RAW_DATAS_FOLDER = CURRENT_FILE.parent.parent.parent.parent.parent.parent  # Get raw datas folder.
-MAIN_RAW_FILE = MAIN_RAW_DATAS_FOLDER / "Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
-# ==================== This part yourse. ===========================
+# =================== This part is mine. ============================
+MAIN_RAW_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
+# ==================== This part is yourse. ===========================
 # # Get root parent folder.
 # parent_folder = CURRENT_FILE.parent.parent.parent  # go 2 folder back
 
@@ -20,8 +19,9 @@ MAIN_RAW_FILE = MAIN_RAW_DATAS_FOLDER / "Raw_datas/Bioinformatics/FASTA/Homo_sap
 ROOT_PATH = CURRENT_FILE.parent.parent.parent  # go 3 folder back.
 
 # Pure sequence file output path.
-OUTPUT_DIR = Path(f"{ROOT_PATH}/results/outputs")
-OUTPUT_DIR.mkdir(exist_ok=True)
+PS_OUTPUT_DIR = Path(f"{ROOT_PATH}/results/outputs")
+PS_OUTPUT_DIR.mkdir(exist_ok=True)
 
-LOG_DIR = Path(f"{ROOT_PATH}/results/logs")
-LOG_DIR.mkdir(exist_ok=True)
+# Fasta file purification details path.
+FFPD_LOG_DIR = Path(f"{ROOT_PATH}/results/logs")
+FFPD_LOG_DIR.mkdir(exist_ok=True)
