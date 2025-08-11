@@ -2,11 +2,11 @@
 
 import time
 
-from ranners import rn
+from main_ranners import mrn
 
 if __name__ == "__main__":
     # Processing time file.
     start_time = time.time()
-    rn()
+    mrn()
     elapsed = time.time() - start_time
     print(f"\n---------- Processing time: {elapsed:.3f}s ----------")

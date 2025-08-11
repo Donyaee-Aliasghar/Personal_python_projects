@@ -9,10 +9,10 @@ CURRENT_FILE = Path(__file__).resolve()
 MAIN_RAW_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
 # ==================== This part is yourse. ===========================
 # # Get root parent folder.
-# parent_folder = CURRENT_FILE.parent.parent.parent  # go 2 folder back
+# parent_raw_data_folder = CURRENT_FILE.parent.parent.parent  # go 2 folder back
 
 # # Get main file.
-# RAW_DATA = parent_folder / "datas/fasta.fa"
+# MAIN_RAW_FILE = parent_raw_data_folder / "datas/fasta.fa"
 # ===============================================
 
 # Root project path.
@@ -25,3 +25,7 @@ PS_OUTPUT_DIR.mkdir(exist_ok=True)
 # Fasta file purification details path.
 FFPD_LOG_DIR = Path(f"{ROOT_PATH}/results/logs")
 FFPD_LOG_DIR.mkdir(exist_ok=True)
+
+# Get results directory files.
+parent_pure_sequence_folder = CURRENT_FILE.parent.parent.parent
+PS_FILE = parent_pure_sequence_folder / "results/outputs/pure_sequence.fasta"
