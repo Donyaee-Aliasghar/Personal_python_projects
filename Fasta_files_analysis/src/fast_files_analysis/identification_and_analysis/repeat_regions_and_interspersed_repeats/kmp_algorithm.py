@@ -1,10 +1,13 @@
 """Implementig the KMP algorithm for sequence search."""
 
+from typing import List, Dict
 
-def kmpa(file, pattern):
+
+def kmpa(text: List[str], pattern: Dict[str, str]) -> list[str]:
     """Algorithm KMP to search for patters in the input file, the output of which is a list of indexes where the patterns start."""
 
-    def compute_lps(pattern):
+    # Create table LPS.
+    def build_lps(pattern):
         lps = [0] * len(pattern)
         length = 0
         i = 1
@@ -21,20 +24,26 @@ def kmpa(file, pattern):
                     i += 1
         return lps
 
-    lps = compute_lps(pattern)
-    i = 0
-    j = 0
+    lps = build_lps(pattern)
     positions = []
-    while i < len(file):
-        if pattern[j] == file[i]:
+    i = j = 0
+    while i < len(text):
+        if pattern[j] == text[i]:
             i += 1
             j += 1
-            if j == len(pattern):
-                positions.append(j - j)
-                j = lps[j - 1]
-        else:
+        if j == len(pattern):
+            positions.append(i - j)
+            j = lps[j - 1]
+        elif i < len(text) and pattern[j] != text[i]:
             if j != 0:
                 j = lps[j - 1]
             else:
                 i += 1
     return positions
+
+
+def main(seq_lines: List[str], ks: dict[str, str]) -> None:
+    """searching all sequences."""
+    for name, pattern in ks.items():
+        positions = kmpa(seq_lines, pattern)
+        print(f"{name} ({pattern}): Number = {len(positions)} | Positions = {positions[:30]}")

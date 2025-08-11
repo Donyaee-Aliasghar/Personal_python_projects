@@ -8,7 +8,7 @@ from pathes import PS_FILE
 def mrn():
     """This does something."""
     # Fasta file purification operation.
-    # pf()
+    pf()
     # repeat regions and interspersed repeats operations.
-    with open(PS_FILE, "r", encoding="utf-8") as f:
-        rrn(f.read())
+    # rrn(PS_FILE)
+    
