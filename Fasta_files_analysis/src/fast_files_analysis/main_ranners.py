@@ -9,10 +9,10 @@ from identification_and_analysis.gene_and_regulatory_element_annotation.runner i
 def mrn():
     """This does something."""
     # Fasta file purification operation.
-    pf()
+    # pf()
 
-    # repeat regions and interspersed repeats operations.
-    rrn(PS_FILE)
+    # Repeat regions and interspersed repeats operations.
+    # rrn(PS_FILE)
 
-    # gene_and_regulatory_element_annotation operations.
-    grn(PS_FILE)
+    # Gene_and_regulatory_element_annotation operations.
+    # grn(PS_FILE)

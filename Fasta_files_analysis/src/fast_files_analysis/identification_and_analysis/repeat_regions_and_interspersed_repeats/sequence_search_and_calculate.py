@@ -1,14 +1,15 @@
 """Searching for known sequences in the file and calculating the repetition percentage."""
 
-from typing import List, Dict
+from typing import Dict
 
 from .kmp_algorithm import kmpa
+from pathes import RRAIR_OUTPUT_DIR
 
 
-def aks(s: List[str], ks: Dict[str, str]) -> Dict[str, str]:
+def aks(data: Dict[str, str], ks: Dict[str, str]) -> Dict[str, str]:
     """searching sequences operation."""
     results = {}
-    for header, seq in s.items():
+    for header, seq in data.items():
         results[header] = {}
         seq_len = len(seq)
         for name, pattern in ks.items():
@@ -19,9 +20,16 @@ def aks(s: List[str], ks: Dict[str, str]) -> Dict[str, str]:
     return results
 
 
-def main(s: List[str], kss: Dict[str, str]) -> None:
-    results = aks(s, kss)
-    for header, data in results.items():
-        print(f"\nresults for {header}\n")
-        for pattern_name, (count, perc) in data.items():
-            print(f"sequence {pattern_name}: Number of repetitions = {count}, Coverage percentage = {perc:.3f}%")
+def main(data: Dict[str, str], ks: Dict[str, str]) -> None:
+    """Operations and create file."""
+    results = aks(data, ks)
+    with open(
+        f"{RRAIR_OUTPUT_DIR}/repeat_regions_and_interspersed_repeats.txt",
+        "w",
+        encoding="utf-8",
+    ) as fout:
+        fout.write(f"\n{"="*20} sequence search and calculate results {"="*20}\n")
+        for pattern_name, (count, perc) in results["sequence"].items():
+            fout.write(f"Sequence: {pattern_name}\nNumber of repetitions: {count}\nCoverage percentage: {perc:.10f}%\n")
+            fout.write(f"{"-"*30}\n")
+    print(f"[✅] sequence earch and calculate operation done.")

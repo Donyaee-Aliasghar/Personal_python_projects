@@ -69,16 +69,16 @@ def pf() -> None:
                     flog.write(f"[❌] Removed duplicate sequence {header}\n")
                 else:
                     seen_hashes.add(seq_hash)
-                    fout.write(f">{header}\n")
+                    fout.write(f"{header}\n")
                     for i in range(0, len(cleaned_seq), 80):
                         fout.write(cleaned_seq[i : i + 80] + "\n")
                     kept_seqs += 1
 
         # Create all deleted operations in sequence in the log file.
-        flog.write("\n==================== Summary ====================\n")
+        flog.write(f"\n{"="*20} Summary {"="*20}\n")
         flog.write(f"Total sequences processed: {total_seqs}\n")
         flog.write(f"Sequences kept: {kept_seqs}\n")
         flog.write(f"Removed short sequences (<{min_len}): {removed_short}\n")
         flog.write(f"Removed duplicate sequences: {removed_duplicate}\n")
 
-        print("[✅] Cleaning done, Check results folder.")
+        print("[✅] Cleaning sequence done. Check results folder and pure_sequence.fasta file.")

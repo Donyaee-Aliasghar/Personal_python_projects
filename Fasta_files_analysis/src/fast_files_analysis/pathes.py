@@ -18,14 +18,18 @@ MAIN_RAW_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/FASTA/Homo_sa
 # Root project path.
 ROOT_PATH = CURRENT_FILE.parent.parent.parent  # go 3 folder back.
 
-# Pure sequence file output path.
+# Pure sequence file output path.(pure file)
 PS_OUTPUT_DIR = Path(f"{ROOT_PATH}/results/outputs")
 PS_OUTPUT_DIR.mkdir(exist_ok=True)
 
-# Fasta file purification details path.
+# Fasta file purification details path.(log file)
 FFPD_LOG_DIR = Path(f"{ROOT_PATH}/results/logs")
 FFPD_LOG_DIR.mkdir(exist_ok=True)
 
 # Get results directory files.
 parent_pure_sequence_folder = CURRENT_FILE.parent.parent.parent
 PS_FILE = parent_pure_sequence_folder / "results/outputs/pure_sequence.fasta"
+
+# Repeat regions and interspersed repeats output file path.
+RRAIR_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/repeat_regions_and_interspersed_repeats_operations")
+RRAIR_OUTPUT_DIR.mkdir(exist_ok=True)

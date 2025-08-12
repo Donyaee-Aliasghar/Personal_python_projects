@@ -2,8 +2,10 @@
 
 from typing import List, Dict
 
+from pathes import RRAIR_OUTPUT_DIR
 
-def kmpa(text: List[str], pattern: Dict[str, str]) -> list[str]:
+
+def kmpa(text: str, pattern: Dict[str, str]) -> List[str]:
     """Algorithm KMP to search for patters in the input file, the output of which is a list of indexes where the patterns start."""
 
     # Create table LPS.
@@ -42,8 +44,21 @@ def kmpa(text: List[str], pattern: Dict[str, str]) -> list[str]:
     return positions
 
 
-def main(seq_lines: List[str], ks: dict[str, str]) -> None:
-    """searching all sequences."""
-    for name, pattern in ks.items():
-        positions = kmpa(seq_lines, pattern)
-        print(f"{name} ({pattern}): Number = {len(positions)} | Positions = {positions[:30]}")
+def main(seq_lines: str, ks: dict[str, str]) -> None:
+    """Searching all sequences."""
+
+    with open(
+        f"{RRAIR_OUTPUT_DIR}/search_patterns_with_algorithm.txt",
+        "w",
+        encoding="utf-8",
+    ) as fout:
+        fout.write(f"\n{"="*30} Search patterns results {"="*30}\n")
+        for name, pattern in ks.items():
+            positions = kmpa(seq_lines, pattern)
+
+            fout.write(
+                f"\nName: {name}\nPattern: {pattern}\nNumber: {len(positions)}\nPositions: {positions[:5]}\n[⚠]For heavy processing, 5 is enough.\n"
+            )
+            fout.write(f"{"-"*30}\n")
+
+    print(f"[✅] Search for patters operation done.")
