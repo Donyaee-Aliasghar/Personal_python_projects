@@ -4,6 +4,7 @@ import re
 
 from typing import Dict, List, Tuple
 from Bio.Seq import Seq
+from pathes import GAREA_OUTPUT_DIR
 
 
 def fm(sequence: Seq, motif_dict: dict[str, re.Pattern]) -> dict[str, list[tuple[int, str]]]:
@@ -19,10 +20,13 @@ def fm(sequence: Seq, motif_dict: dict[str, re.Pattern]) -> dict[str, list[tuple
 
 def pmr(motif_results: Dict[str, List[Tuple[int, str]]]) -> None:
     """Print results operations."""
-    for motif_name, matches in motif_results.items():
-        print(f"\n[✅] {motif_name} found at positions (1-based index):")
-        if matches:
-            for pos, seq in matches:
-                print(f"[🟢] Position: {pos}, Sequence: {seq}")
-        else:
-            print("[❌] No matches found.")
+    with open(f"{GAREA_OUTPUT_DIR}/finding_motifs.txt", "w", encoding="utf-8") as fout:
+        fout.write(f"\n{"-"*30} Show motifs {"-"*30}\n")
+        for motif_name, matches in motif_results.items():
+            fout.write(f"\nMotif name: {motif_name}\nLength: {len(matches)}\nFound at positions (1-based index):\n")
+            if matches:
+                for index, (pos, seq) in enumerate(matches, start=1):
+                    fout.write(f"\tPosition({index:,}): {pos:,} - Sequence({index:,}): {seq}")
+                    fout.write("\t")
+            else:
+                fout.write("[❌] No matches found.")

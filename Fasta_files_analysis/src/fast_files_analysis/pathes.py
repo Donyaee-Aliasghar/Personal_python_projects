@@ -33,3 +33,7 @@ PS_FILE = parent_pure_sequence_folder / "results/outputs/pure_sequence.fasta"
 # Repeat regions and interspersed repeats output file path.
 RRAIR_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/repeat_regions_and_interspersed_repeats_operations")
 RRAIR_OUTPUT_DIR.mkdir(exist_ok=True)
+
+# gene and regulatory element annotation output file path.
+GAREA_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/gene_and_regulatory_element_annotation")
+GAREA_OUTPUT_DIR.mkdir(exist_ok=True)

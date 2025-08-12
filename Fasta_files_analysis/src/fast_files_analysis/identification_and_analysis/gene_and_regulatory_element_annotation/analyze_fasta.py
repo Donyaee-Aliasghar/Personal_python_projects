@@ -1,23 +1,33 @@
 """Module for analysis fasta file."""
 
 from Bio import SeqIO
-from Bio.SeqUtils import GC
+from Bio.SeqUtils import gc_fraction
 
-from find_motifs import fm, pmr
-from regulatory_element_patterns import motif_patterns
-from find_orfs import forfs
-from translate_orf import torf
+from pathes import GAREA_OUTPUT_DIR
+from .find_motifs import fm, pmr
+from .regulatory_element_patterns import motif_patterns
+from .find_orfs import forfs
+from .translate_orf import torf
 
 
-def af(fasta_path: str) -> None:
+def af(pure_file: str) -> None:
     """Full analyze file operations."""
-    record = SeqIO.read(fasta_path, "fasta")
+    record = SeqIO.read(pure_file, "fasta")
     seq = record.seq
-    print(f"Sequence ID: {record.id}")
-    print(f"Sequence length: {len(seq)}")
-    print(f"GC content: {GC(seq):.3f}%")
-    print(f"AT content: {(GC(seq) / len(seq)) * 100:,.3f}%")
-    print(f"First 100 bases:\n{seq[:100]}\n")
+
+    gc = seq.upper().count("G")
+    cc = seq.upper().count("C")
+    ac = seq.upper().count("A")
+    tc = seq.upper().count("T")
+    gcf = gc_fraction(seq) * 100
+
+    with open(f"{GAREA_OUTPUT_DIR}/full_analysis.txt", "w", encoding="utf-8") as fout:
+        fout.write(f"\n{"="*30} Summary analyze {"="*30}\n")
+        fout.write(f"Sequence ID: {record.id}\n")
+        fout.write(f"Sequence length: {len(seq):,} bp\n")
+        fout.write(f"GC content: {gc+cc:,} bp({gcf:.10f}%) \n")
+        fout.write(f"AT content: {ac+tc:,} bp({100-gcf:.10f}%) \n")
+        fout.write(f"First 100 bases:\n{seq[:100]}...\n")
 
     # Regulatory elements searching.
     motif_results = fm(seq, motif_patterns)
@@ -27,7 +37,11 @@ def af(fasta_path: str) -> None:
     orfs = forfs(seq, min_length=300)
 
     # Translate and show 10 firts motifs.
-    for idx, (start, end, orf_seq) in enumerate(orfs[:10], 1):
-        aa_seq = torf(orf_seq)
-        print(f"\nORF {idx}: Start={start}, End={end}, Length={end - start + 1} bp")
-        print(f"Amino acid sequence (first 50 aa):\n{aa_seq[:50]}")
+    with open(f"{GAREA_OUTPUT_DIR}/finding_ORFs.txt", "a", encoding="utf-8") as fout:
+        for idx, (start, end, orf_seq) in enumerate(orfs[:10], 1):
+            aa_seq = torf(orf_seq)
+            fout.write(
+                f"\nORF number {idx:,}\n\t+.Start: {start:,}\n\t+.End: {end:,}\n\t+.Length: {end - start + 1:,} bp\n\t+.Amino acid sequence (first 30 aa): {aa_seq[:30]}..."
+            )
+
+    print("[✅] Full analyze file operation done.")

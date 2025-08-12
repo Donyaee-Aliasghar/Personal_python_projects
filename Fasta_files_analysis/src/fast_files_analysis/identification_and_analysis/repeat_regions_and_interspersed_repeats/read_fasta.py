@@ -1,7 +1,8 @@
 """This module for read pure file."""
 
 from typing import List
-
+from Bio import SeqIO
+from Bio.SeqUtils import gc_fraction
 from pathes import RRAIR_OUTPUT_DIR
 
 
@@ -9,6 +10,8 @@ def rf(filepath: str) -> List[str]:
     """operation."""
 
     fasta_list: List[str] = []
+    record = SeqIO.read(filepath, "fasta")
+    seq = record.seq
 
     with open(filepath, "r", encoding="utf-8") as f, open(
         f"{RRAIR_OUTPUT_DIR}/read_pure_fasta.txt",
@@ -31,6 +34,6 @@ def rf(filepath: str) -> List[str]:
 
         # Create rrair text file.
         fout.write(f"\n{"="*20} Read pure file length results {"="*20}\n")
-        fout.write(f"\nNumber of sequence reads: {len(seq_part):,} bp\n")
+        fout.write(f"\nNumber of sequence reads: {len(seq):,} bp\n")
     print(f"[✅] Read pure sequence file operation done.")
     return fasta_list
