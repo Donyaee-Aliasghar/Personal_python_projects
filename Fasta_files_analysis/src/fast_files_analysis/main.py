@@ -9,4 +9,4 @@ if __name__ == "__main__":
     start_time = time.time()
     mrn()
     elapsed = time.time() - start_time
-    print(f"\n---------- Processing time: {elapsed:.3f}s ----------")
+    print(f"\n>>>>>> ⚪ 🔴 🟢 🟡 Processing time: {elapsed:.3f}s 🟡 🟢 🔴 ⚪ <<<<<<")

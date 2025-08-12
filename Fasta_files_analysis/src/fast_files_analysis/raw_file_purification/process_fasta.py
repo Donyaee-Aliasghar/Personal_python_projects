@@ -5,10 +5,10 @@ from typing import List
 from .cleaning_sequence import cs
 from .hash_seq import hs
 
-from pathes import MAIN_RAW_FILE, PS_OUTPUT_DIR, FFPD_LOG_DIR
+from pathes import PS_OUTPUT_DIR, FFPD_LOG_DIR
 
 
-def pf() -> None:
+def pf(MAIN_RAW_FASTA_FILE) -> None:
     """Main operation for file purification."""
     allowed_bases = set("ATGC")
     min_len = 80
@@ -18,7 +18,7 @@ def pf() -> None:
     removed_duplicate = 0
     kept_seqs = 0
 
-    with open(MAIN_RAW_FILE, "r", encoding="utf-8") as fin, open(
+    with open(MAIN_RAW_FASTA_FILE, "r", encoding="utf-8") as fin, open(
         f"{PS_OUTPUT_DIR}/pure_sequence.fasta", "w", encoding="utf-8"
     ) as fout, open(f"{FFPD_LOG_DIR}/fasta_file_purification_details.log", "w", encoding="utf-8") as flog:
         header = None

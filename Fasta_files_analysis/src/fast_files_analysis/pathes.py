@@ -6,7 +6,8 @@ from pathlib import Path
 CURRENT_FILE = Path(__file__).resolve()
 
 # =================== This part is mine. ============================
-MAIN_RAW_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
+MAIN_RAW_FASTA_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/FASTA/Homo_sapiens.GRCh38.dna.chromosome.1.fa"
+MAIN_RAW_GTF_FILE = "/home/ubuntu/Programming/Raw_datas/Bioinformatics/GTF/Homo_sapiens.GRCh38.114.chr.gtf"
 # ==================== This part is yourse. ===========================
 # # Get root parent folder.
 # parent_raw_data_folder = CURRENT_FILE.parent.parent.parent  # go 2 folder back
@@ -34,6 +35,10 @@ PS_FILE = parent_pure_sequence_folder / "results/outputs/pure_sequence.fasta"
 RRAIR_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/repeat_regions_and_interspersed_repeats_operations")
 RRAIR_OUTPUT_DIR.mkdir(exist_ok=True)
 
-# gene and regulatory element annotation output file path.
+# Gene and regulatory element annotation output file path.
 GAREA_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/gene_and_regulatory_element_annotation")
 GAREA_OUTPUT_DIR.mkdir(exist_ok=True)
+
+# Find all RNAs output file path.
+FAR_OUTPUT_DIR = Path(f"{PS_OUTPUT_DIR}/finding_all_rnas")
+FAR_OUTPUT_DIR.mkdir(exist_ok=True)
