@@ -19,4 +19,4 @@ def mrn() -> None:
     # grn(PS_FILE)
 
     # Operation with GTF for type of RNAs.
-    gtfrn(MAIN_RAW_GTF_FILE, PS_FILE)
+    # gtfrn(MAIN_RAW_GTF_FILE, PS_FILE)
