@@ -2,9 +2,9 @@
 
 from pathes import MAIN_RAW_FASTA_FILE, PS_FILE, MAIN_RAW_GTF_FILE
 from raw_file_purification.process_fasta import pf
-from identification_and_analysis.repeat_regions_and_interspersed_repeats.runner import rn as rrn
-from identification_and_analysis.gene_and_regulatory_element_annotation.runner import rn as grn
-from identification_and_analysis.finding_all_rnas.runner import rn as gtfrn
+from parts.repeat_regions_and_interspersed_repeats.runner import rn as rrn
+from parts.gene_and_regulatory_element_annotation.runner import rn as grn
+from parts.finding_all_rnas.runner import rn as gtfrn
 
 
 def mrn() -> None:
